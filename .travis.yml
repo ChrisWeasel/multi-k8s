@@ -13,4 +13,10 @@ after_success:
   - docker build -t cratclif/multi-nginx ./nginx
   - docker build -t cratclif/multi-server ./server
   - docker build -t cratclif/multi-worker ./worker
-
+#Login to the docker CLI
+- echo "$DOCKER_PASSWORD"| docker login -u "$DOCKER_ID" --password-stdin
+# Take thos images and push them to docker
+- docker push cratclif/multi-client
+- docker push cratclif/multi-nginx
+- docker push cratclif/multi-server
+- docker push cratclif/multi-worker
