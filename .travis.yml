@@ -1,8 +1,29 @@
 sudo: required
 services:
   - docker
+
+env:
+  global:
+    - SHA=$(git rev-parse HEAD)
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
+
 before_install:
+  - openss script after encrypting fil
   - curl https://sdk.cloud.google.com | bash > /dev/null;
   - source $HOME/google-cloud-sdk/path.bash.inc
   - gcloud components update kubectl
   - gcloud auth activate-service-account --key-file service-account.json
+  - gcloud config set project <id from google>
+  - gcloud config set compute/zone <zone from google>
+  - gcloud container cluster get-credentials <clustername>
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t cratclif/react-test -f./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true cratclif/react-test npm test
+
+deploy:
+  provider: script
+  script: bash ./deploy.sh
+  on :
+    branch: master
