@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: fygitfingers.ca
+spec:
+  secretName: fygitfinger.ca
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: fygitfingers.ca
+  dnsNames:
+    - fygitfingers.ca
+    - www.fygitfingers.ca
